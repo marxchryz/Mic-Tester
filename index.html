@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+  
+</body>
+</html>
+<script>
+function success(stream) {
+  let status = '';
+  let audioTracks = stream.getAudioTracks();
+  audioTracks.map(( track, i ) => {
+    status += 'Audio ' + i + ': ' + ( track.muted ? 'mute' : 'NOT MUTE') + '<br>'
+  })
+  document.body.innerHTML = status;
+}
+
+function fail(error) {
+   console.log(error);
+   if (error === 'NO_DEVICES_FOUND') {
+      // NO_DEVICES_FOUND (no microphone og microphone disabled)
+      console.log('mic disabled')
+   }
+}
+
+navigator.getUserMedia({audio : true}, success, fail);
+</script>
