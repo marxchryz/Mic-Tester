@@ -9,13 +9,23 @@
 </body>
 </html>
 <script>
-function success(stream) {
+let audioTracks = null;
+
+function displayAudioTracks () {
   let status = '';
-  let audioTracks = stream.getAudioTracks();
   audioTracks.map(( track, i ) => {
-    status += 'Audio ' + i + ': ' + ( track.muted ? 'mute' : 'NOT MUTE') + '<br>'
+    status += 'Audio ' + i + ': ' + ( track.muted ? '<span style="background: lime;">mute</span>' : '<span style="background: red; color: white;">NOT MUTE</span>') + '<br>'
   })
   document.body.innerHTML = status;
+}
+
+function success(stream) {
+  audioTracks = stream.getAudioTracks();
+  displayAudioTracks();
+  audioTracks.map(track => {
+    track.onmute = displayAudioTracks;
+    track.onunmute = displayAudioTracks;
+  })
 }
 
 function fail(error) {
@@ -26,5 +36,8 @@ function fail(error) {
    }
 }
 
-navigator.getUserMedia({audio : true}, success, fail);
+window.addEventListener('load', e => {
+  navigator.getUserMedia({audio : true}, success, fail);
+});
+
 </script>
